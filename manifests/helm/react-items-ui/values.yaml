@@ -1,0 +1,18 @@
+replicaCount: 2
+revisionHistoryLimit: 3
+image:
+  repository: michaelsteven
+  name: react-items-ui
+  tag: latest
+  pullSecret: regsecret
+  pullPolicy: Always
+  runAsUser: 1001
+service:
+  name: react-items-ui
+  type: ClusterIP
+  externalPort: 3001
+resources: {}
+ingress:
+  appName: react-items-ui
+  tlsSecretName: wildcard-ibmgarageforcloud-com
+  itemsPath: react-items-ui.ibmgarageforcloud.com

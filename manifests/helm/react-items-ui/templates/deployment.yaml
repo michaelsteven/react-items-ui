@@ -1,0 +1,82 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "name" . }}
+  labels:
+    app: {{ template "name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ template "releasetag" . }}
+    heritage: {{ .Release.Service }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ template "name" . }}
+      release: {{ .Release.Name }}
+  replicas: {{ .Values.replicaCount }}
+  # The number of old deployments you want to keep around
+  revisionHistoryLimit: {{ .Values.revisionHistoryLimit }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "name" . }}
+        release: {{ .Release.Name }}
+    spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - {{ template "name" . }}
+              topologyKey: kubernetes.io/hostname
+      securityContext:
+        runAsUser: {{ .Values.image.runAsUser }}
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}/{{ .Values.image.name }}:{{ .Values.image.tag }}"
+          resources:
+            limits:
+              #cpu: "2"
+              cpu: "0.5"
+              memory: 100Mi
+            requests:
+              cpu: "0.5"
+              memory: 100Mi
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: CLIENT_PORT
+              value: "3000"
+            - name: PROXY_SERVER_PORT
+              value: "3001"
+            - name: BACKEND_API_ROOT
+              value: "/api"
+            - name: API_SERVER_BASE_URL
+              value: "http://springboot-items-api"
+            - name: API_SERVER_PORT
+              value: "8080"
+          ports:
+            - name: app-port
+              containerPort: 3001
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: "/liveness"
+              port: app-port
+              scheme: HTTP
+            initialDelaySeconds: 20
+            periodSeconds: 5
+            successThreshold: 1
+            timeoutSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: app-port
+              scheme: HTTP
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            successThreshold: 1
+            timeoutSeconds: 5

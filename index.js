@@ -30,6 +30,8 @@ app.get('/liveness', (req, res) => {
   res.status(200).send({ status: 'UP' });
 });
 
+app.use(express.static(`${__dirname}/build`));
+
 app.use(cors())
 
 app.listen(port, () => console.log(`Listening on port ${port}`));
