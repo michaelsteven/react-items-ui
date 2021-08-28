@@ -10,6 +10,7 @@ spec:
   http:
     - route:
         - destination:
+#            subset: {{ .Values.subset.version }}
             host: {{ .Values.service.name }}
             port:
               number: {{ .Values.service.appPort }}
