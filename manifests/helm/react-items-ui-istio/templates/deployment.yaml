@@ -59,13 +59,13 @@ spec:
             - name: API_SERVER_PORT
               value: "8080"
           ports:
-            - name: app-port
+            - name: http-app
               containerPort: 3001
               protocol: TCP
           livenessProbe:
             httpGet:
               path: "/liveness"
-              port: app-port
+              port: http-app
               scheme: HTTP
             initialDelaySeconds: 20
             periodSeconds: 5
@@ -74,7 +74,7 @@ spec:
           readinessProbe:
             httpGet:
               path: /health
-              port: app-port
+              port: http-app
               scheme: HTTP
             initialDelaySeconds: 10
             periodSeconds: 5

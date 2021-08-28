@@ -1,0 +1,4 @@
+apiVersion: v1
+description: Helm chart for react Items UI
+name: react-items-ui
+version: 1.0
