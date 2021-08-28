@@ -51,7 +51,7 @@ spec:
             - name: CLIENT_PORT
               value: "3000"
             - name: PROXY_SERVER_PORT
-              value: "3001"
+              value: "{{ .Values.service.appPort }}"
             - name: BACKEND_API_ROOT
               value: "/api"
             - name: API_SERVER_BASE_URL
@@ -59,13 +59,13 @@ spec:
             - name: API_SERVER_PORT
               value: "8080"
           ports:
-            - name: app-port
-              containerPort: 3001
+            - name: http-app
+              containerPort: {{ .Values.service.appPort }}
               protocol: TCP
           livenessProbe:
             httpGet:
               path: "/liveness"
-              port: app-port
+              port: http-app
               scheme: HTTP
             initialDelaySeconds: 20
             periodSeconds: 5
@@ -74,7 +74,7 @@ spec:
           readinessProbe:
             httpGet:
               path: /health
-              port: app-port
+              port: http-app
               scheme: HTTP
             initialDelaySeconds: 10
             periodSeconds: 5

@@ -4,12 +4,12 @@ metadata:
   name: {{ .Values.service.name }}
 spec:
   hosts:
-    - "{{ .Values.service.name }}.ibmgarageforcloud.com"
+    - "{{ .Values.ingress.itemsPath }}"
   gateways:
-    - {{ .Values.service.name }}
+    - "{{ .Values.ingress.gateway }}"
   http:
     - route:
         - destination:
             host: {{ .Values.service.name }}
             port:
-              number: 3001
+              number: {{ .Values.service.appPort }}

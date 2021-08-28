@@ -10,7 +10,7 @@ image:
 service:
   name: react-items-ui
   type: ClusterIP
-  externalPort: 3001
+  appPort: 3001
 resources: {}
 ingress:
   appName: react-items-ui
