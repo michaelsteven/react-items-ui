@@ -1,25 +1,27 @@
+{{ if .Values.ingress }}
 apiVersion: networking.istio.io/v1alpha3
 kind: Gateway
 metadata:
-  name: ibmgarageforcloud-com
+  name: {{ .Values.ingress.gateway }}
 spec:
   selector:
     istio: ingressgateway # use istio default controller
   servers:
     - port:
         number: 80
-        name: http
+        name: http-{{ template "name" . }}
         protocol: HTTP
       hosts:
-        - "*.ibmgarageforcloud.com"
-    #      tls:
-    #        httpsRedirect: true
+        - "{{ .Values.ingress.host }}"
+      tls:
+        httpsRedirect: true
     - port:
         number: 443
-        name: https
+        name: https-{{ template "name" . }}
         protocol: HTTPS
       hosts:
-        - "*.ibmgarageforcloud.com"
+        - "{{ .Values.ingress.host }}"
       tls:
         mode: SIMPLE
-        credentialName: wildcard-ibmgarageforcloud-com
+        credentialName: {{ .Values.certificate.tlsSecret.name }}
+{{ end }}

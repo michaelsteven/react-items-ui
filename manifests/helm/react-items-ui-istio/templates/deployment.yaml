@@ -58,7 +58,7 @@ spec:
             - name: API_SERVER_BASE_URL
               value: "http://springboot-items-api"
             - name: API_SERVER_PORT
-              value: "8080"
+              value: "80"
           ports:
             - name: http-app
               containerPort: {{ .Values.service.appPort }}

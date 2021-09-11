@@ -1,0 +1,30 @@
+replicaCount: 2
+revisionHistoryLimit: 3
+subset:
+  version: v1
+image:
+  repository: michaelsteven
+  name: react-items-ui
+  tag: latest
+  pullPolicy: Always
+  runAsUser: 1001
+service:
+  name: react-items-ui
+  type: ClusterIP
+  servicePort: 80
+  appPort: 3001
+resources: {}
+ingress:
+  gateway: react-items-ui-ibmgarageforcloud-com
+  appName: react-items-ui
+  host: "react-items-ui.ibmgarageforcloud.com"
+certificate:
+  tlsSecret:
+    name: react-items-ui-ibmgarageforcloud-com-tls
+  issuer:
+    name: vault-issuer
+    kind: ClusterIssuer
+    group: cert-manager.io
+  organization: ibmgarageforcloud
+  duration: 360h
+  renewBefore: 200h
