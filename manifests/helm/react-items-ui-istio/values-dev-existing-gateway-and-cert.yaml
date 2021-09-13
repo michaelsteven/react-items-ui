@@ -15,17 +15,12 @@ service:
   appPort: 3001
 resources: {}
 gateway:
-  create: true
-  name: react-items-ui-ibmgarageforcloud-com
+  name: ibmgarageforcloud-com.istio-system
   appName: react-items-ui
   host: "react-items-ui.ibmgarageforcloud.com"
 certificate:
   tlsSecret:
-    name: react-items-ui-ibmgarageforcloud-com-tls
-  issuer:
-    name: vault-issuer
-    kind: ClusterIssuer
-    group: cert-manager.io
+    name: ibmgarageforcloud-com-tls
   organization: ibmgarageforcloud
   duration: 360h
   renewBefore: 200h

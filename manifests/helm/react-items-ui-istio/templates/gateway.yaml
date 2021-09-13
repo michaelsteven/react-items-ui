@@ -1,8 +1,9 @@
-{{ if .Values.ingress }}
+{{ if .Values.gateway }}
+{{ if .Values.gateway.create }}
 apiVersion: networking.istio.io/v1alpha3
 kind: Gateway
 metadata:
-  name: {{ .Values.ingress.gateway }}
+  name: {{ .Values.gateway.name }}
 spec:
   selector:
     istio: ingressgateway # use istio default controller
@@ -24,4 +25,5 @@ spec:
       tls:
         mode: SIMPLE
         credentialName: {{ .Values.certificate.tlsSecret.name }}
+{{ end }}
 {{ end }}
