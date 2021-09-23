@@ -1,0 +1,83 @@
+* {
+  box-sizing: border-box;
+  font-family: 'IBM Plex Sans', 'Helvetiva Nue', Arial, sans-serif;
+}
+
+/* body,
+#root {
+  height: calc(100vh - 64px);
+} */
+body {
+  margin: 0;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+a:hover,
+a:active,
+a:focus,
+a:visited {
+  color: inherit;
+}
+
+.width_container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+h1 {
+  font-size: 1.375rem;
+  font-weight: 400;
+  display: inline-block;
+}
+
+p {
+  line-height: 1.6;
+}
+
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  animation: App-logo-spin infinite 20s linear;
+  height: 40vmin;
+}
+
+.App-header {
+  background-color: gray;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.filepond--drop-label {
+  background-color: #fff;
+}
+
+.filepond--panel-root.filepond--panel-top,
+.filepond--panel-root.filepond--panel-center,
+.filepond--panel-root.filepond--panel-bottom {
+  background-color: #fff;
+}

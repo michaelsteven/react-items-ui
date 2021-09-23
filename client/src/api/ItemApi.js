@@ -1,25 +1,4 @@
-const sendRequest = (options) => {
-    const headers = new Headers({
-        'Content-Type': 'application/json',
-    });
-
-    const defaults = {headers: headers};
-    options = Object.assign({}, defaults, options);
-
-    return fetch(options.url, options)
-        .then(
-            response =>
-                response.json()
-                    .then(
-                        json => {
-                            if (!response.ok) {
-                                return Promise.reject(json)
-                            }
-                            return json;
-                        }
-                    )
-        )
-};
+import sendRequest from "./SendRequest";
 
 export function checkHealth(){
     return sendRequest({
@@ -27,6 +6,7 @@ export function checkHealth(){
         method: 'GET'
     });
 }
+
 
 export function getHttpTraces(){
     return sendRequest({
@@ -37,10 +17,9 @@ export function getHttpTraces(){
 
 
 export function getPageItems(pageable){
-
     if(pageable){
         return sendRequest({
-            url: "/api/v1/items?page=" + pageable.page,
+            url: "/api/v1/items?page=" + (pageable.pageNumber) + "&size=" + (pageable.pageSize),
             method: 'GET'
         });
     } else {
@@ -49,5 +28,39 @@ export function getPageItems(pageable){
             method: 'GET'
         });
     }
+}
 
+
+export function addItem(item){
+    if(item){
+        return sendRequest({
+            url: "/api/v1/items",
+            method: 'post',
+            body: JSON.stringify(item),
+            headers: {
+                "Content-Type": "application/json"
+            }
+        });
+    }
+}
+
+
+export function editItem(item){
+    if(item){
+        return sendRequest({
+            url: "/api/v1/items/" + item.id,
+            method: 'put',
+            body: JSON.stringify(item),
+            headers: {
+                "Content-Type": "application/json"
+            }
+        });
+    }
+}
+
+export function deleteItem(id){
+    return sendRequest({
+        url: "/api/v1/items/" + id,
+        method: 'delete'
+    });
 }
