@@ -52,11 +52,8 @@ class ItemTableRow extends Component {
         });
     }
 
-    handleClick(e){
-        alert("Hello world")
-        //const {id} = e.currentTarget.dataset;
-        //alert(id);
-       // e.preventDefault();
+    handleClick = event => {
+        alert("Hello world");
     }
 
     editItem = event => {
@@ -80,26 +77,20 @@ class ItemTableRow extends Component {
 
     onDelete(){
         deleteItem(this.state.item.id).then(res => {
-            this.setState({confirmDialog: {isOpen:false}}, () => {
-                this.props.history.push("/items");
-            });
+            window.location.reload(false);
         }).catch(error => {
-            if(error.message && error.success === false){
-                this.showAlert(error.message, "error");
-            } else {
-                this.showAlert(error.message, "error");
-            }
+            this.showAlert(error.message, "error");
             console.log(error);
         });
     }
 
     render() {
         return (
-            <TableRow onclick={this.handleClick}>
-                <TableCell>{this.state.item.id}</TableCell>
-                <TableCell>{this.state.item.name}</TableCell>
-                <TableCell>{this.state.item.description}</TableCell>
-                <TableCell>{this.state.item.dateSubmitted}</TableCell>
+            <TableRow>
+                <TableCell onClick={this.handleClick}>{this.state.item.id}</TableCell>
+                <TableCell onClick={this.handleClick}>{this.state.item.name}</TableCell>
+                <TableCell onClick={this.handleClick}>{this.state.item.description}</TableCell>
+                <TableCell onClick={this.handleClick}>{this.state.item.dateSubmitted}</TableCell>
                 <TableCell>
                     <IconButton onClick={this.editItem}>
                         <EditIcon />
