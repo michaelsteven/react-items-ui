@@ -1,9 +1,8 @@
 import React from 'react';
 import styled, { ThemeProvider } from 'styled-components';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import { MuiThemeProvider } from '@material-ui/core/styles';
 
-import { theme, muiTheme } from '../Library/theme';
+import { theme  } from '../Library/theme';
 
 import Header from '../Header/Header';
 import Home from '../Pages/Home';
@@ -21,7 +20,6 @@ const DNE = styled.div`
 
 const NoMatch = () => <DNE>Page does not exist.</DNE>;
 
-const muiThemeObject = muiTheme();
 
 const Main = styled.div`
   background: ${(props) => props.theme.colors.background};
@@ -34,7 +32,6 @@ export default function App() {
   function pageSequences() {
       return (
         <ThemeProvider theme={theme}>
-          <MuiThemeProvider theme={muiThemeObject}>
             <Main>
               <Router>
                 
@@ -47,7 +44,6 @@ export default function App() {
                 
               </Router>
             </Main>
-          </MuiThemeProvider>
         </ThemeProvider>
       );
   }
