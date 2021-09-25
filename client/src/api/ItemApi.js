@@ -46,6 +46,7 @@ export function addItem(item){
 
 
 export function editItem(item){
+    alert("In editItem:" + JSON.stringify(item));
     if(item){
         return sendRequest({
             url: "/api/v1/items/" + item.id,

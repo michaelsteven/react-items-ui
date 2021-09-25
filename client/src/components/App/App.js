@@ -8,8 +8,6 @@ import { theme, muiTheme } from '../Library/theme';
 import Header from '../Header/Header';
 import Home from '../Pages/Home';
 import Items from '../Items/Items';
-import NewItem from '../Items/New';
-import EditItem from '../Items/Edit';
 
 import './App.css';
 
@@ -44,8 +42,6 @@ export default function App() {
                   <Switch>
                     <Route exact path="/" component={Home} />
                     <Route exact path="/items" component={Items} />
-                    <Route exact path="/items/new" component={NewItem} />
-                    <Route exact path="/items/edit" component={EditItem} />
                     <Route component={NoMatch} />
                   </Switch>
                 
