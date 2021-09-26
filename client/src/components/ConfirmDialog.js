@@ -20,7 +20,7 @@ const useStyles = makeStyles(() => ( {
 
 
 export default function ConfirmDialog(props) {
-    const { confirmDialog, setConfirmDialog} = props;
+    const { confirmDialog } = props;
     const classes = useStyles();
 
     return(
@@ -37,7 +37,7 @@ export default function ConfirmDialog(props) {
                 </Typography>
             </DialogContent>
             <DialogActions className = {classes.dialogAction}>
-                <Button color="primary" onClick={() => setConfirmDialog({ ...confirmDialog, isOpen: false})}>No</Button>
+                <Button color="primary" onClick={confirmDialog.onCancel}>No</Button>
                 <Button color="secondary" onClick={confirmDialog.onConfirm}>Yes</Button>
             </DialogActions>
         </Dialog>

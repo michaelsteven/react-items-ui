@@ -31,6 +31,7 @@ class Items extends Component{
             isOpen: false,
             title: "",
             onConfirm: "",
+            onCancel: ""
         },        
         itemUnderEdit:{}
     };
@@ -40,8 +41,6 @@ class Items extends Component{
         super(props);
         this.showAlert = this.showAlert.bind(this);
         this.setPage = this.setPage.bind(this);
-        this.setFormDialog = this.setFormDialog.bind(this);
-        this.setConfirmDialog = this.setConfirmDialog.bind(this);
     }
 
 
@@ -67,37 +66,43 @@ class Items extends Component{
 
     handleNewClicked = (event) => {
         event.preventDefault();
-        const formDialog = {
+        const formDialogValue = {
             isOpen: true,
             title: 'New Item',
             action: "new"
         }
-        this.setState({itemUnderEdit:{}});
-        this.setFormDialog(formDialog);
+        this.setState({itemUnderEdit:{}}, () => {
+            this.setState({
+                formDialog: formDialogValue
+            });
+        });
     }
-
 
     handleEditClicked = item => event => {
         event.preventDefault();
-        const formDialog = {
+        const formDialogValue = {
             isOpen: true,
             title: 'Edit Item',
             action: "edit"
         }
-        this.setState({itemUnderEdit: item});
-        this.setFormDialog(formDialog);
+        this.setState({itemUnderEdit: item}, () => {
+            this.setState({
+                formDialog: formDialogValue
+            });
+        });
     };
 
 
     handleDeleteClicked = item => event => {
         event.preventDefault();
-        const confirmDialog = {
+        const confirmDialogValue = {
             isOpen: true,
             title: 'Are you sure you want to delete?',
             subTitle: "You can't undo this operation",
             onConfirm: this.onDelete( item ),
+            onCancel: this.handleConfirmDialogCancel
         }
-        this.setConfirmDialog(confirmDialog);  
+        this.setState({confirmDialog: confirmDialogValue});
     }
 
 
@@ -105,7 +110,9 @@ class Items extends Component{
         event.preventDefault();
         deleteItem(item.id).then(res => {
             console.log(res);
-            window.location.reload(false);
+            this.setState({confirmDialog:{isOpen:false}}, () => {
+               this.setPage(0); 
+            });
         }).catch(error => {
             this.showAlert(error.message, "error");
             console.log(error);
@@ -115,26 +122,13 @@ class Items extends Component{
 
     handleFormDialogCancel = (event) => {
         event.preventDefault();
-        const formDialog = {
-            isOpen: false
-        }
-        this.setFormDialog(formDialog);
+        this.setState({formDialog: {isOpen: false}});
     }
 
-
-    setFormDialog( formDialogValue ) {
-        this.setState({
-            formDialog: formDialogValue
-        });
+    handleConfirmDialogCancel = (event) => {
+        event.preventDefault();
+        this.setState({confirmDialog: {isOpen: false}});
     }
-
-
-    setConfirmDialog( confirmDialogValue ) {
-        this.setState({
-            confirmDialog: confirmDialogValue
-        });
-    }
-
 
     setPage(pageNumberValue){
         this.setState({showLoading: true});
@@ -159,11 +153,9 @@ class Items extends Component{
         if(item.id > 0 ){
             editItem(item).then(res => {
                 console.log( res );
-                const formDialog = {
-                    isOpen: false
-                }
-                this.setFormDialog(formDialog);
-                window.location.reload(false);
+                this.setState({formDialog: {isOpen: false}}, () => {
+                    this.setPage(0); 
+                });
             }).catch(error => {
                 this.displayError(error);
             });
@@ -171,10 +163,9 @@ class Items extends Component{
         else{
             addItem(item).then(res => {
                 console.log( res );
-                const formDialog = {
-                    isOpen: false
-                }
-                this.setFormDialog(formDialog);
+                this.setState({formDialog: {isOpen: false}}, () => {
+                    this.setPage(0); 
+                });
             }).catch(error => {
                 this.displayError(error);
             });
@@ -211,18 +202,6 @@ class Items extends Component{
 
         return(
             <Container maxWidth="md">
-                <FormDialog
-                    formDialog = {this.state.formDialog}
-                    setFormDialog = {this.setFormDialog}>
-                    <ItemForm item={this.state.itemUnderEdit} 
-                        onSubmit={this.handleAddOrEdit} 
-                        onCancel={this.handleFormDialogCancel}
-                />
-                </FormDialog>
-                <ConfirmDialog
-                    confirmDialog = {this.state.confirmDialog}
-                    setConfirmDialog = {this.setConfirmDialog}
-                />
                 <h3>Items</h3>
                 {
                     this.state.showLoading
@@ -266,7 +245,18 @@ class Items extends Component{
                                 />
                             </div>
                         </div>
-                }
+                } 
+                <FormDialog
+                    formDialog = {this.state.formDialog}
+                    setFormDialog = {this.setFormDialog}>
+                    <ItemForm item={this.state.itemUnderEdit} 
+                        onSubmit={this.handleAddOrEdit} 
+                        onCancel={this.handleFormDialogCancel}
+                />
+                </FormDialog>
+                <ConfirmDialog
+                    confirmDialog = {this.state.confirmDialog}
+                />
             </Container>
         );
     }
