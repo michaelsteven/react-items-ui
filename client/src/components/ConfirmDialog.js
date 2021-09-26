@@ -3,7 +3,7 @@ import { Button, Dialog, DialogTitle, DialogContent, DialogActions, Typography }
 import {makeStyles} from '@mui/styles'
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 
-const useStyles = makeStyles(theme => ( {
+const useStyles = makeStyles(() => ( {
     dialog: {
         position: 'absolute'
     },

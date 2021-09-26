@@ -3,7 +3,7 @@ import { Button, Dialog, DialogTitle, DialogContent, Typography } from '@mui/mat
 import { makeStyles } from '@mui/styles'
 import CloseIcon from '@mui/icons-material/Close';
 
-const useStyles = makeStyles(theme => ( {
+const useStyles = makeStyles(() => ( {
     dialogWrapper: {
         position: 'absolute',
     },

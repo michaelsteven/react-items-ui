@@ -3,6 +3,7 @@
     "version": "1.0.0",
     "description": "",
     "main": "index.js",
+    "type": "module",
     "scripts": {
         "client-install": "npm install --prefix client",
         "start": "node index.js",
@@ -12,20 +13,18 @@
     },
     "keywords": [],
     "author": "Michael Hepfer",
-    "license": "IBM",
+    "license": "Apache 2.0",
     "devDependencies": {
-        "concurrently": "^5.0.2"
+        "concurrently": "^6.2.1",
+        "react-scripts": "^4.0.3"
     },
     "dependencies": {
-        "@sendgrid/mail": "^6.5.1",
-        "axios": "^0.21.1",
         "cors": "^2.8.5",
-        "dotenv": "^8.6.0",
+        "dotenv": "^10.0.0",
         "express": "^4.17.1",
-        "g": "^2.0.1",
-        "nodemon": "^2.0.2",
-        "npm": "^7.21.1",
-        "path": "^0.12.7"
+        "nodemon": "^2.0.13",
+        "npm": "^7.24.1",
+        "request": "^2.88.2"
     },
     "engines": {
         "node": "16.x"

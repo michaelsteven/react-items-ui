@@ -6,6 +6,7 @@ import DeleteIcon from '@mui/icons-material/DeleteForever';
 
 class ItemTableRow extends Component {
     handleEditClicked = this.props.handleEditClicked;
+
     handleDeleteClicked = this.props.handleDeleteClicked;
 
     state = {
@@ -24,7 +25,7 @@ class ItemTableRow extends Component {
     }
 
     handleClick = event => {
-        alert("Hello world");
+        event.preventDefault();
     }
 
     render() {

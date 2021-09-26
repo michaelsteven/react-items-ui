@@ -15,8 +15,13 @@ COPY package*.json index.js  ./
 # Build react bundle static files
 FROM dependencies AS build
 WORKDIR /app
-COPY ./client ./
-RUN npm install && \
+COPY --from=dependencies  ./client ./
+# Installing react-scripts globally lets us 
+# run the "npm run build" command without it being
+# added to the node_modules folder.
+ENV DISABLE_ESLINT_PLUGIN=true
+RUN npm install react-scripts@4.0.3 -g && \
+    npm install --only=production && \
     npm run build
 
 ### STAGE 2: Run ###

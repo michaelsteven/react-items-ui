@@ -19,7 +19,7 @@ export function getHttpTraces(){
 export function getPageItems(pageable){
     if(pageable){
         return sendRequest({
-            url: "/api/v1/items?page=" + (pageable.pageNumber) + "&size=" + (pageable.pageSize),
+            url: "/api/v1/items?page=".concat(pageable.pageNumber,"&size=",pageable.pageSize),
             method: 'GET'
         });
     } else {
@@ -46,10 +46,9 @@ export function addItem(item){
 
 
 export function editItem(item){
-    alert("In editItem:" + JSON.stringify(item));
     if(item){
         return sendRequest({
-            url: "/api/v1/items/" + item.id,
+            url: "/api/v1/items/".concat(item.id),
             method: 'put',
             body: JSON.stringify(item),
             headers: {
@@ -61,7 +60,7 @@ export function editItem(item){
 
 export function deleteItem(id){
     return sendRequest({
-        url: "/api/v1/items/" + id,
+        url: "/api/v1/items/".concat(id),
         method: 'delete'
     });
 }

@@ -5,7 +5,9 @@ import { TextField, Button, ButtonGroup } from '@mui/material';
 class ItemForm extends Component { 
 
     onSubmit = this.props.onSubmit;
+
     onCancel = this.props.onCancel;
+    
     state = {
         item: {
             name: '',
@@ -32,9 +34,9 @@ class ItemForm extends Component {
 
 
     handleChange = evt => {
-        const name = evt.target.name;
+        const {name} = evt.target;
         const newValue = evt.target.value;
-        this.setState({item: {...this.state.item, [name]: newValue} });
+        this.setState(prevState => ({item: { ...prevState.item, [name]: newValue } }));
     };
 
 

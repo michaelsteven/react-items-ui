@@ -19,7 +19,7 @@ export default function Header({ children }) {
 
   return (
     <div>
-      <MenuAppBar></MenuAppBar>
+      <MenuAppBar/>
       <PageHeader>
         <HeaderChild className="width_container">{children}</HeaderChild>
       </PageHeader>

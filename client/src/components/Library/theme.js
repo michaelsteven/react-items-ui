@@ -135,8 +135,6 @@ export const theme = {
     unit: '5',
   },
   illustrations: {
-    //dotsColor: lightenDarkenColor(colors.primary, 20),
-    //bgColor: lightenDarkenColor(colors.primary, 80),
     outlineColor: colors.primary,
   },
 };

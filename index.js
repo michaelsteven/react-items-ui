@@ -1,17 +1,20 @@
-const express = require('express');
-const request = require('request')
-const cors = require('cors')
-const dotenv = require('dotenv')
+import dotenv from 'dotenv';
+import express from 'express';
+import request from 'request';
+import cors from 'cors';
+import path from 'path';
 
 dotenv.config()
 const port = process.env.PROXY_SERVER_PORT;
-const apiUrl = process.env.API_SERVER_BASE_URL + ":" + process.env.API_SERVER_PORT + process.env.BACKEND_API_ROOT
+const clientPort = process.env.CLIENT_PORT;
+const apiUrl = process.env.API_SERVER_BASE_URL + ":" + process.env.API_SERVER_PORT + process.env.BACKEND_API_ROOT;
+const __dirname = path.resolve();
+
 
 const corsOptions = {
-    origin: (origin, callback) => {
-        callback(null, true)
-    },
-}
+  origin: "http://localhost:${clientPort}",
+};
+
 const app = express();
 app.options('*', cors(corsOptions))
 
@@ -40,8 +43,6 @@ app.get('/liveness', (req, res) => {
   res.status(200).send({ status: 'UP' });
 });
 
-app.use(express.static(`${__dirname}/build`));
-
-app.use(cors())
+app.use(express.static(path.join(__dirname, 'build')));
 
 app.listen(port, () => console.log(`Listening on port ${port}`));

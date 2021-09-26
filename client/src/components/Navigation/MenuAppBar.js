@@ -6,8 +6,8 @@ import Typography from '@mui/material/Typography';
 import Switch from '@mui/material/Switch';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormGroup from '@mui/material/FormGroup';
-import HamburgerMenu from "../Navigation/HamburgerMenu";
-import ProfileMenu from "../Navigation/ProfileMenu";
+import HamburgerMenu from "./HamburgerMenu";
+import ProfileMenu from "./ProfileMenu";
 
 export default function MenuAppBar() {
   const [auth, setAuth] = React.useState(true);

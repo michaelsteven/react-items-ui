@@ -1,13 +1,13 @@
 import React, {Component} from 'react';
 import {withRouter} from 'react-router-dom';
-import {getPageItems} from "../../api/ItemApi";
-import ItemTableRow from "../Items/ItemTableRow";
 import {Container, IconButton, Table, TableHead, TableBody, TableRow, TableCell, TablePagination} from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import FormDialog from '../FormDialog';
 import ConfirmDialog from '../ConfirmDialog';
 import ItemForm from './ItemForm';
-import {addItem, editItem, deleteItem} from "../../api/ItemApi";
+import ItemTableRow from "./ItemTableRow";
+import {addItem, editItem, deleteItem, getPageItems} from "../../api/ItemApi";
+
 
 class Items extends Component{
     state = {
@@ -59,7 +59,7 @@ class Items extends Component{
 
     handleRowsPerPageChange = (event) => {
         event.preventDefault();
-        this.setState({pageSize: event.target.value}, function () {
+        this.setState({pageSize: event.target.value}, () => {
             this.setPage(0);
         });
     }
@@ -90,6 +90,7 @@ class Items extends Component{
 
 
     handleDeleteClicked = item => event => {
+        event.preventDefault();
         const confirmDialog = {
             isOpen: true,
             title: 'Are you sure you want to delete?',
@@ -101,7 +102,9 @@ class Items extends Component{
 
 
     onDelete = item => event => {
+        event.preventDefault();
         deleteItem(item.id).then(res => {
+            console.log(res);
             window.location.reload(false);
         }).catch(error => {
             this.showAlert(error.message, "error");
@@ -133,17 +136,16 @@ class Items extends Component{
     }
 
 
-    setPage(pageNumber){
+    setPage(pageNumberValue){
         this.setState({showLoading: true});
-        this.setState({activePage: pageNumber});
+        this.setState({activePage: pageNumberValue});
         const defaultPageable = {
-            pageNumber: pageNumber,
+            pageNumber: pageNumberValue,
             pageSize: this.state.pageSize
         };
         getPageItems(defaultPageable).then(res => {
             this.setState({
                 data: res,
-                items: res.content,
                 showLoading: false
             });
         }).catch(error => {
@@ -180,6 +182,12 @@ class Items extends Component{
     }
 
 
+    showAlert = (message, type) => {
+        alert(JSON.stringify(message));
+        console.log(message, type);
+    };
+
+
     displayError(error){
         if(error.message && error.success === false){
             this.showAlert(error.message, "error");
@@ -188,18 +196,6 @@ class Items extends Component{
         }
         console.log(error);
     }
-
-    showAlert = (message, type) => {
-        const Noty = require('noty');
-        new Noty({
-            text: message,
-            timeout: 5000,
-            type: type,
-            theme: 'metroui',
-            layout: 'topLeft',
-            closeWith: ['button'],
-        }).show();
-    };
 
 
     render(){

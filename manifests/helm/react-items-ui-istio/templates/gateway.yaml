@@ -13,7 +13,7 @@ spec:
         name: http-{{ template "name" . }}
         protocol: HTTP
       hosts:
-        - "{{ .Values.ingress.host }}"
+        - "{{ .Values.gateway.host }}"
       tls:
         httpsRedirect: true
     - port:
@@ -21,7 +21,7 @@ spec:
         name: https-{{ template "name" . }}
         protocol: HTTPS
       hosts:
-        - "{{ .Values.ingress.host }}"
+        - "{{ .Values.gateway.host }}"
       tls:
         mode: SIMPLE
         credentialName: {{ .Values.certificate.tlsSecret.name }}
