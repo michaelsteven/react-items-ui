@@ -18,7 +18,7 @@ const useStyles = makeStyles(() => ( {
 
 
 export default function FormDialog(props) {
-    const { formDialog, children, setFormDialog} = props;
+    const { formDialog, children, onCancel} = props;
     const classes = useStyles();
     return(
         <Dialog open={formDialog.isOpen} classes={{paper:classes}}>
@@ -27,7 +27,7 @@ export default function FormDialog(props) {
                     <Typography variant="h6" componen="div" style={{flexGrow:1}}  >
                         {formDialog.title}
                     </Typography>
-                    <Button color="secondary" onClick={ () => setFormDialog({ ...formDialog, isOpen: false})}>
+                    <Button color="secondary" onClick={onCancel}>
                         <CloseIcon />
                     </Button>
                 </div>

@@ -248,7 +248,7 @@ class Items extends Component{
                 } 
                 <FormDialog
                     formDialog = {this.state.formDialog}
-                    setFormDialog = {this.setFormDialog}>
+                    onCancel={this.handleFormDialogCancel}>
                     <ItemForm item={this.state.itemUnderEdit} 
                         onSubmit={this.handleAddOrEdit} 
                         onCancel={this.handleFormDialogCancel}
