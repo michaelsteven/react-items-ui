@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {withRouter} from 'react-router-dom';
-import {Container, IconButton, Table, TableHead, TableBody, TableRow, TableCell, TablePagination} from '@mui/material';
+import {Container, IconButton, Table, TableHead, TableBody, TableRow, TableSortLabel, TableCell, TablePagination} from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import FormDialog from '../FormDialog';
 import ConfirmDialog from '../ConfirmDialog';
@@ -11,6 +11,10 @@ import {addItem, editItem, deleteItem, getPageItems} from "../../api/ItemApi";
 
 class Items extends Component{
     state = {
+        sort: {
+            by: "id",
+            direction: "asc"
+        },
         activePage: 0,
         pageSize: 5,
         data:{
@@ -125,17 +129,20 @@ class Items extends Component{
         this.setState({formDialog: {isOpen: false}});
     }
 
+
     handleConfirmDialogCancel = (event) => {
         event.preventDefault();
         this.setState({confirmDialog: {isOpen: false}});
     }
+
 
     setPage(pageNumberValue){
         this.setState({showLoading: true});
         this.setState({activePage: pageNumberValue});
         const defaultPageable = {
             pageNumber: pageNumberValue,
-            pageSize: this.state.pageSize
+            pageSize: this.state.pageSize,
+            sort: "".concat(this.state.sort.by,",",this.state.sort.direction)
         };
         getPageItems(defaultPageable).then(res => {
             this.setState({
@@ -179,6 +186,27 @@ class Items extends Component{
     };
 
 
+    handleSort = (sortBy) => {
+        let sortOrder = this.state.sort.direction;
+        return () => {
+            if(sortBy === this.state.sort.by){
+                sortOrder = sortOrder === "asc" ? "desc" : "asc";
+            }else {
+               sortOrder = "asc"; 
+            }
+            this.setState({
+                sort:{
+                    by: sortBy,
+                    direction: sortOrder
+                }
+            }, () => {
+                    this.setPage(0);
+                }
+            );
+        }
+    }
+
+
     displayError(error){
         if(error.message && error.success === false){
             this.showAlert(error.message, "error");
@@ -215,10 +243,42 @@ class Items extends Component{
                             <Table className="table table-hover">
                                 <TableHead>
                                     <TableRow>
-                                        <TableCell>id</TableCell>
-                                        <TableCell>Item name</TableCell>
-                                        <TableCell>Item Description</TableCell>
-                                        <TableCell>Date Created</TableCell>
+                                        <TableCell>
+                                            <TableSortLabel
+                                                active={this.state.sort.by === "id"}
+                                                direction={this.state.sort.direction}
+                                                onClick={this.handleSort("id")}
+                                            >
+                                                id
+                                            </TableSortLabel>
+                                        </TableCell>
+                                        <TableCell>
+                                            <TableSortLabel
+                                                    active={this.state.sort.by === "name"}
+                                                    direction={this.state.sort.direction}
+                                                    onClick={this.handleSort("name")}
+                                                >
+                                                Item name
+                                            </TableSortLabel>
+                                        </TableCell>
+                                        <TableCell>
+                                            <TableSortLabel
+                                                    active={this.state.sort.by === "description"}
+                                                    direction={this.state.sort.direction}
+                                                    onClick={this.handleSort("description")}
+                                                >
+                                                Item Description
+                                            </TableSortLabel>
+                                        </TableCell>
+                                        <TableCell>
+                                            <TableSortLabel
+                                                    active={this.state.sort.by === "dateSubmitted"}
+                                                    direction={this.state.sort.direction}
+                                                    onClick={this.handleSort("dateSubmitted")}
+                                                >  
+                                                Date Created
+                                            </TableSortLabel>
+                                        </TableCell>
                                         <TableCell colSpan={2} align='center'>                
                                             <IconButton 
                                                 onClick={this.handleNewClicked}

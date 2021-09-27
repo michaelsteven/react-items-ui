@@ -19,7 +19,7 @@ export function getHttpTraces(){
 export function getPageItems(pageable){
     if(pageable){
         return sendRequest({
-            url: "/api/v1/items?page=".concat(pageable.pageNumber,"&size=",pageable.pageSize),
+            url: "/api/v1/items?page=".concat(pageable.pageNumber,"&size=",pageable.pageSize,"&sort=",pageable.sort),
             method: 'GET'
         });
     } else {
