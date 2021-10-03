@@ -2,8 +2,9 @@ import React, {useEffect, useState} from 'react';
 import {IconButton, TableRow, TableCell } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/DeleteForever';
+import PropTypes from 'prop-types';
 
-export default function ItemTableRow(props) {
+const ItemTableRow = (props) => {
     const {handleEditClicked, handleDeleteClicked}  = props;
     const [ item, setItem ] = useState({id:0,name:'',description:'',dateSubmitted:''});  
 
@@ -34,3 +35,16 @@ export default function ItemTableRow(props) {
         </TableRow>
     );
 }
+
+ItemTableRow.propTypes = {
+    handleEditClicked: PropTypes.object.isRequired, 
+    handleDeleteClicked: PropTypes.object.isRequired, 
+    item: PropTypes.shape({
+        id: PropTypes.number.isRequired,
+        name: PropTypes.string.isRequired,
+        description: PropTypes.string.isRequired,
+        dateSubmitted: PropTypes.string.isRequired,
+    }).isRequired
+}
+
+export default ItemTableRow;

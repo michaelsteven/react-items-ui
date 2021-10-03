@@ -68,10 +68,20 @@ const ItemForm = (props) => {
     );
 }
 
+ItemForm.defaultProps = {
+    initialItem: {
+        name: '',
+        description: ''
+    }
+};
+
 ItemForm.propTypes = {
     onSubmit: PropTypes.object.isRequired, 
     onCancel: PropTypes.object.isRequired, 
-    initialItem: PropTypes.object.isRequired
-};
+    initialItem: PropTypes.shape({
+        name: PropTypes.string,
+        description: PropTypes.string,
+    })
+}
 
 export default ItemForm;
