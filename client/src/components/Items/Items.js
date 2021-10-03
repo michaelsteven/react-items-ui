@@ -82,6 +82,7 @@ class Items extends Component{
         });
     }
 
+
     handleEditClicked = item => event => {
         event.preventDefault();
         const formDialogValue = {
@@ -272,9 +273,9 @@ class Items extends Component{
                                         </TableCell>
                                         <TableCell>
                                             <TableSortLabel
-                                                    active={this.state.sort.by === "dateSubmitted"}
+                                                    active={this.state.sort.by === "createdTimestamp"}
                                                     direction={this.state.sort.direction}
-                                                    onClick={this.handleSort("dateSubmitted")}
+                                                    onClick={this.handleSort("createdTimestamp")}
                                                 >  
                                                 Date Created
                                             </TableSortLabel>
@@ -309,7 +310,7 @@ class Items extends Component{
                 <FormDialog
                     formDialog = {this.state.formDialog}
                     onCancel={this.handleFormDialogCancel}>
-                    <ItemForm item={this.state.itemUnderEdit} 
+                    <ItemForm initialItem={this.state.itemUnderEdit} 
                         onSubmit={this.handleAddOrEdit} 
                         onCancel={this.handleFormDialogCancel}
                 />

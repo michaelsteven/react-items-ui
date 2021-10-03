@@ -46,7 +46,7 @@ export default function HamburgerMenu() {
                 onClose={handleMenuClose}
                 >
                 <MenuItem data-value="/" onClick={handleItemClick}>Home</MenuItem>
-                <MenuItem data-value="/items" onClick={handleItemClick}>Items</MenuItem>
+                <MenuItem id="hamburgerMenuItemItems" data-value="/items" onClick={handleItemClick}>Items</MenuItem>
                 <MenuItem data-value="/orders" onClick={handleItemClick}>Orders</MenuItem>
             </MenuList>
         </div>

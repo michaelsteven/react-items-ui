@@ -1,51 +1,36 @@
-import React, {Component} from 'react';
-import {withRouter} from 'react-router-dom';
+import React, {useEffect, useState} from 'react';
 import {IconButton, TableRow, TableCell } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/DeleteForever';
 
-class ItemTableRow extends Component {
-    handleEditClicked = this.props.handleEditClicked;
+export default function ItemTableRow(props) {
+    const {handleEditClicked, handleDeleteClicked}  = props;
+    const [ item, setItem ] = useState({id:0,name:'',description:'',dateSubmitted:''});  
 
-    handleDeleteClicked = this.props.handleDeleteClicked;
-
-    state = {
-        item: {
-            id: 0,
-            name: "",
-            description: "",
-            dateSubmitted: ""
+    useEffect(() => {
+        if(props.item){
+            setItem(props.item );
         }
-    };    
+    },[props])
 
-    componentDidMount() {
-        this.setState({
-            item: this.props.item
-        });
-    }
-
-    handleClick = event => {
+    const handleClick = event => {
         event.preventDefault();
     }
 
-    render() {
-        return (
-            <TableRow>
-                <TableCell onClick={this.handleClick}>{this.state.item.id}</TableCell>
-                <TableCell onClick={this.handleClick}>{this.state.item.name}</TableCell>
-                <TableCell onClick={this.handleClick}>{this.state.item.description}</TableCell>
-                <TableCell onClick={this.handleClick}>{this.state.item.dateSubmitted}</TableCell>
-                <TableCell align='center'>
-                    <IconButton onClick={this.handleEditClicked(this.state.item)}>
-                        <EditIcon />
-                    </IconButton>
-                    <IconButton onClick={this.handleDeleteClicked(this.state.item)}>
-                        <DeleteIcon/>
-                    </IconButton>
-                </TableCell>
-            </TableRow>
-        );
-    }
+    return (
+        <TableRow>
+            <TableCell onClick={handleClick}>{item.id}</TableCell>
+            <TableCell onClick={handleClick}>{item.name}</TableCell>
+            <TableCell onClick={handleClick}>{item.description}</TableCell>
+            <TableCell onClick={handleClick}>{item.dateSubmitted}</TableCell>
+            <TableCell align='center'>
+                <IconButton onClick={handleEditClicked(item)}>
+                    <EditIcon />
+                </IconButton>
+                <IconButton onClick={handleDeleteClicked(item)}>
+                    <DeleteIcon/>
+                </IconButton>
+            </TableCell>
+        </TableRow>
+    );
 }
-
-export default withRouter(ItemTableRow);

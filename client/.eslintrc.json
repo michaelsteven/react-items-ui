@@ -36,6 +36,7 @@
     "global-require": "off",
     "react/prop-types": "off",
     "no-alert": "off",
-    "prefer-object-spread": "off"
+    "prefer-object-spread": "off",
+    "devDependencies": "off"
   }
 }

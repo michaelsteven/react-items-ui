@@ -8,7 +8,7 @@ import Header from '../Header/Header';
 import Home from '../Pages/Home';
 import Items from '../Items/Items';
 
-import './App.css';
+// import './App.css';
 
 const DNE = styled.div`
   align-items: center;
@@ -28,10 +28,9 @@ const Main = styled.div`
 `;
 
 export default function App() {
-
   function pageSequences() {
       return (
-        <ThemeProvider theme={theme}>
+        <ThemeProvider data-test="component-app" theme={theme}>
             <Main>
               <Router>
                 

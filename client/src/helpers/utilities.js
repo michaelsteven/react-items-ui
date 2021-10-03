@@ -17,36 +17,6 @@ export const hexToRgb = (hex) => {
     : null;
 };
 
-export const extractJSON = async (response) => {
-  try {
-    const payload = await response.json();
-    return payload;
-  } catch (error) {
-    const controlledError = new Error(
-      `Unable to process response. Content type ${response.headers.get(
-        'content-type'
-      )}. URL: ${response.url} `
-    );
-    throw controlledError;
-  }
-};
-
-export const extractJSONError = async (response) => {
-  try {
-    const payload = await response.json();
-    return payload;
-  } catch (error) {
-    const controlledError = new Error(
-      `Unable to process response of with status code ${
-        response.status
-      }. Content type ${response.headers.get('content-type')}. URL: ${
-        response.url
-      } `
-    );
-    throw controlledError;
-  }
-};
-
 export const formatOptions = (options, access) => {
   const collection = options.map((option) => ({
     value: option.uuid,
