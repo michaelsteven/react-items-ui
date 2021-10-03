@@ -19,9 +19,9 @@ const ItemTableRow = (props) => {
     }
 
     return (
-        <TableRow>
-            <TableCell onClick={handleClick}>{item.id}</TableCell>
-            <TableCell onClick={handleClick}>{item.name}</TableCell>
+        <TableRow data-test='component-itemtablerow'>
+            <TableCell data-test='component-itemtablerow-idcell' onClick={handleClick}>{item.id}</TableCell>
+            <TableCell data-test='component-itemtablerow-namecell' onClick={handleClick}>{item.name}</TableCell>
             <TableCell onClick={handleClick}>{item.description}</TableCell>
             <TableCell onClick={handleClick}>{item.dateSubmitted}</TableCell>
             <TableCell align='center'>
@@ -37,8 +37,8 @@ const ItemTableRow = (props) => {
 }
 
 ItemTableRow.propTypes = {
-    handleEditClicked: PropTypes.object.isRequired, 
-    handleDeleteClicked: PropTypes.object.isRequired, 
+    handleEditClicked: PropTypes.func.isRequired, 
+    handleDeleteClicked: PropTypes.func.isRequired, 
     item: PropTypes.shape({
         id: PropTypes.number.isRequired,
         name: PropTypes.string.isRequired,

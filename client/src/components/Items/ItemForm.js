@@ -76,8 +76,8 @@ ItemForm.defaultProps = {
 };
 
 ItemForm.propTypes = {
-    onSubmit: PropTypes.object.isRequired, 
-    onCancel: PropTypes.object.isRequired, 
+    onSubmit: PropTypes.func.isRequired, 
+    onCancel: PropTypes.func.isRequired, 
     initialItem: PropTypes.shape({
         name: PropTypes.string,
         description: PropTypes.string,

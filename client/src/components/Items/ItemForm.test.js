@@ -3,7 +3,7 @@ import { shallow } from 'enzyme';
 import { checkProps, findByTestAttr } from '../../../test/testUtils';
 import ItemForm from './ItemForm';
 
-const defaultProps = {onSubmit:{}, onCancel:{}, initialItem:{}};
+const defaultProps = {onSubmit:() => {}, onCancel:() => {}, initialItem:{}};
 
 const setup = (props={}) => {
     const setupProps = { ...defaultProps, ...props };
@@ -11,7 +11,7 @@ const setup = (props={}) => {
 }
 
 test('renders the expected non-empty component without error', () => {
-    const wrapper = setup({onSubmit:{}, onCancel:{}, initialItem:{}});
+    const wrapper = setup({onSubmit:() => {}, onCancel:() => {}, initialItem:{}});
     console.log(wrapper.debug());
     expect(wrapper.exists()).toBe(true);
     const itemFormComponent = findByTestAttr(wrapper,"component-itemform"); 
@@ -19,19 +19,19 @@ test('renders the expected non-empty component without error', () => {
 });
 
 test('does not throw warning with expected props',() =>{
-    const expectedProps = {onSubmit:{}, onCancel:{}, initialItem:{}};
+    const expectedProps = {onSubmit:() => {}, onCancel: () => {}, initialItem:{}};
     const propError = checkProps(ItemForm, expectedProps);
     expect(propError).toBeUndefined();
 });
 
 test('sets name text field default value from props initialItem',() => {
-    const wrapper = setup({onSubmit:{}, onCancel:{}, initialItem:{name:'foo',description:'bar'}});
+    const wrapper = setup({onSubmit:() => {}, onCancel: () => {}, initialItem:{name:'foo',description:'bar'}});
     const nameTextField = findByTestAttr(wrapper,"component-itemform-name"); 
     expect(nameTextField.props().defaultValue).toBe('foo');
 })
 
 test('sets description text field default value form from props initialItem',() => {
-    const wrapper = setup({onSubmit:{}, onCancel:{}, initialItem:{name:'foo',description:'bar'}});
+    const wrapper = setup({onSubmit:() => {}, onCancel: () => {}, initialItem:{name:'foo',description:'bar'}});
     const descriptionTextField = findByTestAttr(wrapper,"component-itemform-description"); 
     expect(descriptionTextField.props().defaultValue).toBe('bar');
 })
