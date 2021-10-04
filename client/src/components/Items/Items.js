@@ -1,5 +1,4 @@
-import React, {Component} from 'react';
-import {withRouter} from 'react-router-dom';
+import React, {useState, useCallback, useEffect} from 'react';
 import {Container, IconButton, Table, TableHead, TableBody, TableRow, TableSortLabel, TableCell, TablePagination} from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import FormDialog from '../FormDialog';
@@ -9,318 +8,268 @@ import ItemTableRow from "./ItemTableRow";
 import {addItem, editItem, deleteItem, getPageItems} from "../../api/ItemApi";
 
 
-class Items extends Component{
-    state = {
-        sort: {
-            by: "id",
-            direction: "asc"
-        },
-        activePage: 0,
-        pageSize: 5,
-        data:{
-            totalElements: 0,
-            content: [],
-              "sort": {
-                "sorted": false,
-                "unsorted": true,
-                "empty": true
-              }
-        },
-        showLoading: false,
-        formDialog: {
-            isOpen: false,
-            title: ""
-        },
-        confirmDialog: {
-            isOpen: false,
-            title: "",
-            onConfirm: "",
-            onCancel: ""
-        },        
-        itemUnderEdit:{}
+const Items = () => {
+    const[sort, setSort] = useState({by: "id",direction: "asc"});
+    const[data, setData] = useState({totalElements: 0,content: [],"sort": {"sorted": false,"unsorted": true,"empty": true}});
+    const[formDialog, setFormDialog] = useState({isOpen: false, title: ""});
+    const[confirmDialog, setConfirmDialog] = useState({isOpen: false, title: "",onConfirm: "",onCancel: ""});
+    const[itemUnderEdit, setItemUnderEdit] = useState();
+    const[activePage, setActivePage] = useState();
+    const[pageSize, setPageSize] = useState(5);
+    const[showLoading, setShowLoading] = useState(false);
+    const[preventReload, setPreventReload] = useState(false);
+
+    const showAlert = (message, type) => {
+        alert(JSON.stringify(message));
+        console.log(message, type);
     };
 
+    const displayError = useCallback(
+        (error) => {
+            if(error.message && error.success === false){
+                showAlert(error.message, "error");
+            } else {
+                showAlert(error.message, "error");
+            }
+            console.log(error);
+        },
+        [],
+    )
 
-    constructor(props){
-        super(props);
-        this.showAlert = this.showAlert.bind(this);
-        this.setPage = this.setPage.bind(this);
-    }
+    const setPage = useCallback(
+        (pageNumberValue) => {
+            setShowLoading(true);
+            setActivePage(pageNumberValue);
+            const defaultPageable = {
+                pageNumber: pageNumberValue,
+                // eslint-disable-next-line object-shorthand
+                pageSize: pageSize,
+                sort: "".concat(sort.by,",",sort.direction)
+            };
+            getPageItems(defaultPageable).then(res => {
+                setData(res);
+                setShowLoading(false);
+            }).catch(error => {
+                displayError(error);
+                setShowLoading(false);
+            });
+        },
+        [sort, displayError,pageSize],
+    )
 
+    /**
+     * call setPage on closing the dialogs and and when pageSize or sort
+     * also prevent calling setPage when the dialog closure is caused by dialog cancel buttons (preventReload)
+     */
+    useEffect(() =>{
+        if(confirmDialog.isOpen === false && formDialog.isOpen === false && !preventReload === true ){
+            setPreventReload(false)
+            setPage(0); 
+        }
+    },[setPage, confirmDialog, formDialog, pageSize, sort, preventReload]);
 
-    componentDidMount(){
-        document.title = "Items";
-        this.setPage(0)
-    }
-
-
-    handlePageChange = (event, newPage) => {
+    const handleFormDialogCancel = (event) => {
         event.preventDefault();
-        this.setPage(newPage);
+        setPreventReload(true);
+        setFormDialog({isOpen: false, reload: false});
     }
 
-
-    handleRowsPerPageChange = (event) => {
+    const handleConfirmDialogCancel = (event) => {
         event.preventDefault();
-        this.setState({pageSize: event.target.value}, () => {
-            this.setPage(0);
-        });
+        setPreventReload(true);
+        setConfirmDialog({isOpen: false, reload: false});
     }
 
+    const handlePageChange = (event, newPage) => {
+        event.preventDefault();
+        setPage(newPage);
+    }
 
-    handleNewClicked = (event) => {
+    const handleRowsPerPageChange = (event) => {
+        event.preventDefault();
+        setPageSize(event.target.value);
+    }
+
+    const handleNewClicked = (event) => {
         event.preventDefault();
         const formDialogValue = {
             isOpen: true,
             title: 'New Item',
             action: "new"
         }
-        this.setState({itemUnderEdit:{}}, () => {
-            this.setState({
-                formDialog: formDialogValue
-            });
-        });
+        setItemUnderEdit({});
+        setFormDialog(formDialogValue);
     }
 
-
-    handleEditClicked = item => event => {
+    const handleEditClicked = item => event => {
         event.preventDefault();
         const formDialogValue = {
             isOpen: true,
             title: 'Edit Item',
             action: "edit"
         }
-        this.setState({itemUnderEdit: item}, () => {
-            this.setState({
-                formDialog: formDialogValue
-            });
-        });
+        setItemUnderEdit(item);
+        setFormDialog(formDialogValue);
     };
 
+    const onDelete = item => event => {
+        event.preventDefault();
+        deleteItem(item.id).then(res => {
+            console.log(res);
+            setConfirmDialog({isOpen:false})
+        }).catch(error => {
+            showAlert(error.message, "error");
+            console.log(error);
+        });
+    }
 
-    handleDeleteClicked = item => event => {
+    const handleDeleteClicked = item => event => {
         event.preventDefault();
         const confirmDialogValue = {
             isOpen: true,
             title: 'Are you sure you want to delete?',
             subTitle: "You can't undo this operation",
-            onConfirm: this.onDelete( item ),
-            onCancel: this.handleConfirmDialogCancel
+            onConfirm: onDelete( item ),
+            onCancel: handleConfirmDialogCancel
         }
-        this.setState({confirmDialog: confirmDialogValue});
+        setConfirmDialog(confirmDialogValue);
     }
 
-
-    onDelete = item => event => {
-        event.preventDefault();
-        deleteItem(item.id).then(res => {
-            console.log(res);
-            this.setState({confirmDialog:{isOpen:false}}, () => {
-               this.setPage(0); 
-            });
-        }).catch(error => {
-            this.showAlert(error.message, "error");
-            console.log(error);
-        });
-    }
-
-
-    handleFormDialogCancel = (event) => {
-        event.preventDefault();
-        this.setState({formDialog: {isOpen: false}});
-    }
-
-
-    handleConfirmDialogCancel = (event) => {
-        event.preventDefault();
-        this.setState({confirmDialog: {isOpen: false}});
-    }
-
-
-    setPage(pageNumberValue){
-        this.setState({showLoading: true});
-        this.setState({activePage: pageNumberValue});
-        const defaultPageable = {
-            pageNumber: pageNumberValue,
-            pageSize: this.state.pageSize,
-            sort: "".concat(this.state.sort.by,",",this.state.sort.direction)
-        };
-        getPageItems(defaultPageable).then(res => {
-            this.setState({
-                data: res,
-                showLoading: false
-            });
-        }).catch(error => {
-            this.displayError(error);
-            this.setState({showLoading: false});
-        });
-    }
-
-
-    handleAddOrEdit = (item) => {
+    const handleAddOrEdit = (item) => {
         if(item.id > 0 ){
             editItem(item).then(res => {
                 console.log( res );
-                this.setState({formDialog: {isOpen: false}}, () => {
-                    this.setPage(0); 
-                });
+                setFormDialog({isOpen: false});
             }).catch(error => {
-                this.displayError(error);
+                displayError(error);
             });
         }
         else{
             addItem(item).then(res => {
                 console.log( res );
-                this.setState({formDialog: {isOpen: false}}, () => {
-                    this.setPage(0); 
-                });
+                setFormDialog({isOpen: false});
             }).catch(error => {
-                this.displayError(error);
+                displayError(error);
             });
         }
     }
 
-
-    showAlert = (message, type) => {
-        alert(JSON.stringify(message));
-        console.log(message, type);
-    };
-
-
-    handleSort = (sortBy) => {
-        let sortOrder = this.state.sort.direction;
+    const handleSort = (sortBy) => {
+        let sortOrder = sort.direction;
         return () => {
-            if(sortBy === this.state.sort.by){
+            if(sortBy === sort.by){
                 sortOrder = sortOrder === "asc" ? "desc" : "asc";
             }else {
                sortOrder = "asc"; 
             }
-            this.setState({
-                sort:{
-                    by: sortBy,
-                    direction: sortOrder
-                }
-            }, () => {
-                    this.setPage(0);
-                }
-            );
+            setSort({by: sortBy, direction: sortOrder});
         }
     }
 
-
-    displayError(error){
-        if(error.message && error.success === false){
-            this.showAlert(error.message, "error");
-        } else {
-            this.showAlert(error.message, "error");
-        }
-        console.log(error);
-    }
-
-
-    render(){
+    const renderTableData = () => {
         let tableLines = [];
-        if(this.state.data && this.state.data.content && this.state.data.totalElements > 0){
-            tableLines = Object.keys(this.state.data.content)
+        if(data && data.content && data.totalElements > 0){
+            tableLines = Object.keys(data.content)
                 .map(key => <ItemTableRow 
                                 key={key} 
-                                handleEditClicked={this.handleEditClicked} 
-                                handleDeleteClicked={this.handleDeleteClicked} 
-                                item={this.state.data.content[key]}/>);
+                                handleEditClicked={handleEditClicked} 
+                                handleDeleteClicked={handleDeleteClicked} 
+                                item={data.content[key]}/>);
+            return tableLines;
         }
-
-        return(
-            <Container maxWidth="md">
-                <h3>Items</h3>
-                {
-                    this.state.showLoading
-                    ?
-                        <div className="align-content-center text-center">
-                            <h4 className="text-muted">Loading. Please Wait...</h4>
-                            <i className="material-icons w3-xxxlarge w3-spin align-content-center">refresh</i>
-                        </div>
-                    :
-                        <div>
-                            <Table className="table table-hover">
-                                <TableHead>
-                                    <TableRow>
-                                        <TableCell>
-                                            <TableSortLabel
-                                                active={this.state.sort.by === "id"}
-                                                direction={this.state.sort.direction}
-                                                onClick={this.handleSort("id")}
-                                            >
-                                                id
-                                            </TableSortLabel>
-                                        </TableCell>
-                                        <TableCell>
-                                            <TableSortLabel
-                                                    active={this.state.sort.by === "name"}
-                                                    direction={this.state.sort.direction}
-                                                    onClick={this.handleSort("name")}
-                                                >
-                                                Item name
-                                            </TableSortLabel>
-                                        </TableCell>
-                                        <TableCell>
-                                            <TableSortLabel
-                                                    active={this.state.sort.by === "description"}
-                                                    direction={this.state.sort.direction}
-                                                    onClick={this.handleSort("description")}
-                                                >
-                                                Item Description
-                                            </TableSortLabel>
-                                        </TableCell>
-                                        <TableCell>
-                                            <TableSortLabel
-                                                    active={this.state.sort.by === "createdTimestamp"}
-                                                    direction={this.state.sort.direction}
-                                                    onClick={this.handleSort("createdTimestamp")}
-                                                >  
-                                                Date Created
-                                            </TableSortLabel>
-                                        </TableCell>
-                                        <TableCell colSpan={2} align='center'>                
-                                            <IconButton 
-                                                onClick={this.handleNewClicked}
-                                                variant="contained"
-                                            >
-                                                <AddIcon/>
-                                            </IconButton>
-                                        </TableCell>
-                                    </TableRow>
-                                </TableHead>
-                                <TableBody>
-                                {tableLines}
-                                </TableBody>
-                            </Table>
-                            <div className="d-flex justify-content-center">
-                                <TablePagination
-                                    rowsPerPageOptions={[5, 10, 100]}
-                                    component="div"
-                                    count={this.state.data.totalElements}
-                                    rowsPerPage={this.state.pageSize}
-                                    page={this.state.activePage}
-                                    onPageChange={this.handlePageChange}
-                                    onRowsPerPageChange={this.handleRowsPerPageChange}
-                                />
-                            </div>
-                        </div>
-                } 
-                <FormDialog
-                    formDialog = {this.state.formDialog}
-                    onCancel={this.handleFormDialogCancel}>
-                    <ItemForm initialItem={this.state.itemUnderEdit} 
-                        onSubmit={this.handleAddOrEdit} 
-                        onCancel={this.handleFormDialogCancel}
-                />
-                </FormDialog>
-                <ConfirmDialog
-                    confirmDialog = {this.state.confirmDialog}
-                />
-            </Container>
-        );
     }
+
+    return(
+        <Container maxWidth="md">
+            <h3>Items</h3>
+            {
+                showLoading
+                ?
+                    <div className="align-content-center text-center">
+                        <h4 className="text-muted">Loading. Please Wait...</h4>
+                        <i className="material-icons w3-xxxlarge w3-spin align-content-center">refresh</i>
+                    </div>
+                :
+                    <div>
+                        <Table className="table table-hover">
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell>
+                                        <TableSortLabel
+                                            active={sort.by === "id"}
+                                            direction={sort.direction}
+                                            onClick={handleSort("id")}
+                                        >
+                                            id
+                                        </TableSortLabel>
+                                    </TableCell>
+                                    <TableCell>
+                                        <TableSortLabel
+                                                active={sort.by === "name"}
+                                                direction={sort.direction}
+                                                onClick={handleSort("name")}
+                                            >
+                                            Item name
+                                        </TableSortLabel>
+                                    </TableCell>
+                                    <TableCell>
+                                        <TableSortLabel
+                                                active={sort.by === "description"}
+                                                direction={sort.direction}
+                                                onClick={handleSort("description")}
+                                            >
+                                            Item Description
+                                        </TableSortLabel>
+                                    </TableCell>
+                                    <TableCell>
+                                        <TableSortLabel
+                                                active={sort.by === "createdTimestamp"}
+                                                direction={sort.direction}
+                                                onClick={handleSort("createdTimestamp")}
+                                            >  
+                                            Date Created
+                                        </TableSortLabel>
+                                    </TableCell>
+                                    <TableCell colSpan={2} align='center'>                
+                                        <IconButton 
+                                            onClick={handleNewClicked}
+                                            variant="contained"
+                                        >
+                                            <AddIcon/>
+                                        </IconButton>
+                                    </TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                            { renderTableData() }
+                            </TableBody>
+                        </Table>
+                        <div className="d-flex justify-content-center">
+                            <TablePagination
+                                rowsPerPageOptions={[5, 10, 100]}
+                                component="div"
+                                count={data.totalElements}
+                                rowsPerPage={pageSize}
+                                page={activePage}
+                                onPageChange={handlePageChange}
+                                onRowsPerPageChange={handleRowsPerPageChange}
+                            />
+                        </div>
+                    </div>
+            } 
+            <FormDialog
+                formDialog = {formDialog}
+                onCancel={handleFormDialogCancel}>
+                <ItemForm initialItem={itemUnderEdit} 
+                    onSubmit={handleAddOrEdit} 
+                    onCancel={handleFormDialogCancel}
+            />
+            </FormDialog>
+            <ConfirmDialog
+                confirmDialog = {confirmDialog}
+            />
+        </Container>
+    );
 }
 
-export default withRouter(Items);
+export default Items;

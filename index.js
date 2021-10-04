@@ -28,9 +28,9 @@ app.use(process.env.BACKEND_API_ROOT, cors(corsOptions), (req, res) => {
       res.status(404).send();
     }
     else {
-      const request_url = `${apiUrl}${req.url}`
-      console.log(request_url)
-      req.pipe(request(request_url)).pipe(res)
+      const request_url = `${apiUrl}${req.url}`;
+      req.pipe(request(request_url)).pipe(res);
+      console.log("".concat(req.method).concat(" ").concat(request_url).concat(" ").concat(res.statusCode));
     }
 });
 
