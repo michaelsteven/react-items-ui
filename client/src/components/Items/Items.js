@@ -1,9 +1,9 @@
 import React, {useState, useCallback, useEffect} from 'react';
 import {Container, IconButton, Table, TableHead, TableBody, TableRow, TableSortLabel, TableCell, TablePagination} from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
-import FormDialog from '../FormDialog';
-import ConfirmDialog from '../ConfirmDialog';
-import ItemForm from './ItemForm';
+import FormDialog from '../FormDialog.tsx';
+import ConfirmDialog from '../ConfirmDialog.tsx';
+import ItemForm from './ItemForm.tsx';
 import ItemTableRow from "./ItemTableRow";
 import {addItem, editItem, deleteItem, getPageItems} from "../../api/ItemApi";
 

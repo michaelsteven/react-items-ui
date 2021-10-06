@@ -1,8 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, ReactElement, FC}  from 'react';
 import { TextField, Button, ButtonGroup } from '@mui/material';
 import PropTypes from 'prop-types';
 
-const ItemForm = (props) => {
+interface IProps {
+    initialItem:{
+        name: string,
+        description: string,
+    },
+    onSubmit: any,
+    onCancel: any
+}
+
+const ItemForm: FC<IProps> = (props): ReactElement<typeof HTMLFormElement> => {
     const [ item, setItem ] = useState({name:'',description:''});
     const {onSubmit, onCancel, initialItem} = props;
 
@@ -12,12 +21,12 @@ const ItemForm = (props) => {
         }
     },[initialItem])
 
-    const handleSubmit = event => {
+    const handleSubmit = (event: { preventDefault: () => void; }) => {
         event.preventDefault();
         onSubmit( item );
     }
 
-    const handleChange = event => {
+    const handleChange = (event: { target: { value?: any; name?: any; }; }) => {
         const {name} = event.target;
         const newValue = event.target.value;
         setItem(prevState => ({ ...prevState, [name]: newValue }));
@@ -52,7 +61,6 @@ const ItemForm = (props) => {
                 helperText = "Enter a description of the item"
                 multiline = {true}
                 rows = "3"
-                rowsmax = "3"
                 onChange = {handleChange}/>
             <br/>
             <ButtonGroup variant="contained">
@@ -78,10 +86,7 @@ ItemForm.defaultProps = {
 ItemForm.propTypes = {
     onSubmit: PropTypes.func.isRequired, 
     onCancel: PropTypes.func.isRequired, 
-    initialItem: PropTypes.shape({
-        name: PropTypes.string,
-        description: PropTypes.string,
-    })
+    initialItem: PropTypes.any
 }
 
 export default ItemForm;

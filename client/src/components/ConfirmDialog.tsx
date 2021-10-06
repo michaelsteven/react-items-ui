@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {ReactElement, FC} from 'react';
 import { Button, Dialog, DialogTitle, DialogContent, DialogActions, Typography } from '@mui/material'
 import {makeStyles} from '@mui/styles'
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
@@ -18,8 +18,17 @@ const useStyles = makeStyles(() => ( {
     }
 }))
 
+interface IProps {
+    confirmDialog: {
+        isOpen: boolean,
+        title: string,
+        subTitle: string,
+        onCancel: any,
+        onConfirm: any
+    }
+}
 
-export default function ConfirmDialog(props) {
+const ConfirmDialog: FC<IProps> = (props): ReactElement<typeof Dialog> => {
     const { confirmDialog } = props;
     const classes = useStyles();
 
@@ -43,3 +52,5 @@ export default function ConfirmDialog(props) {
         </Dialog>
     )
 }
+
+export default ConfirmDialog;
