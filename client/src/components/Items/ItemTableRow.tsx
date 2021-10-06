@@ -1,10 +1,21 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, ReactElement, FC} from 'react';
 import {IconButton, TableRow, TableCell } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/DeleteForever';
 import PropTypes from 'prop-types';
 
-const ItemTableRow = (props) => {
+interface IProps {
+    item: {
+        id: number,
+        name: string,
+        description: string,
+        dateSubmitted: string
+    },
+    handleEditClicked: any,
+    handleDeleteClicked: any
+}
+
+const ItemTableRow: FC<IProps> = (props): ReactElement<typeof TableRow> => {
     const {handleEditClicked, handleDeleteClicked}  = props;
     const [ item, setItem ] = useState({id:0,name:'',description:'',dateSubmitted:''});  
 
@@ -14,7 +25,7 @@ const ItemTableRow = (props) => {
         }
     },[props])
 
-    const handleClick = event => {
+    const handleClick = (event: { preventDefault: () => void; }) => {
         event.preventDefault();
     }
 
