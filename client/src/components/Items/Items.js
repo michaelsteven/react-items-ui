@@ -4,7 +4,7 @@ import AddIcon from '@mui/icons-material/Add';
 import FormDialog from '../FormDialog.tsx';
 import ConfirmDialog from '../ConfirmDialog.tsx';
 import ItemForm from './ItemForm.tsx';
-import ItemTableRow from "./ItemTableRow";
+import ItemTableRow from "./ItemTableRow.tsx";
 import {addItem, editItem, deleteItem, getPageItems} from "../../api/ItemApi";
 
 
