@@ -14,7 +14,6 @@ spec:
       protocol: TCP
   selector:
     app: react-items-ui
-    release: react-items-ui
 ---
 # Source: react-items-ui/templates/deployment.yaml
 apiVersion: apps/v1
@@ -35,20 +34,19 @@ spec:
     metadata:
       labels:
         app: react-items-ui
-        release: react-items-ui
     spec:
       affinity:
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
-          - weight: 100
-            podAffinityTerm:
-              labelSelector:
-                matchExpressions:
-                - key: app
-                  operator: In
-                  values:
-                  - react-items-ui
-              topologyKey: kubernetes.io/hostname
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: app
+                      operator: In
+                      values:
+                        - react-items-ui
+                topologyKey: kubernetes.io/hostname
       securityContext:
         runAsUser: 1001
       containers:
@@ -118,8 +116,8 @@ spec:
               service:
                 name: react-items-ui
                 port:
-                  number:                     
+                  number:
   tls:
     - secretName: wildcard-ibmgarageforcloud-com
-      hosts: 
+      hosts:
         - react-items-ui.ibmgarageforcloud.com
