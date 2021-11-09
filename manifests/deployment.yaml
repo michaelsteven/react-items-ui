@@ -1,0 +1,125 @@
+# Source: react-items-ui/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: react-items-ui
+  labels:
+    app: react-items-ui
+spec:
+  type: ClusterIP
+  ports:
+    - name: http-app
+      port: 3001
+      targetPort: 3001
+      protocol: TCP
+  selector:
+    app: react-items-ui
+    release: react-items-ui
+---
+# Source: react-items-ui/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: react-items-ui
+  labels:
+    app: react-items-ui
+spec:
+  selector:
+    matchLabels:
+      app: react-items-ui
+      release: react-items-ui
+  replicas: 2
+  # The number of old deployments you want to keep around
+  revisionHistoryLimit: 3
+  template:
+    metadata:
+      labels:
+        app: react-items-ui
+        release: react-items-ui
+    spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - react-items-ui
+              topologyKey: kubernetes.io/hostname
+      securityContext:
+        runAsUser: 1001
+      containers:
+        - name: react-items-ui
+          image: "michaelsteven/react-items-ui:latest"
+          imagePullPolicy: Always
+          resources:
+            limits:
+              #cpu: "2"
+              cpu: "0.5"
+              memory: 100Mi
+            requests:
+              cpu: "0.5"
+              memory: 100Mi
+          env:
+            - name: CLIENT_PORT
+              value: "3000"
+            - name: PROXY_SERVER_PORT
+              value: "3001"
+            - name: BACKEND_API_ROOT
+              value: "/api"
+            - name: API_SERVER_BASE_URL
+              value: "http://springboot-items-api"
+            - name: API_SERVER_PORT
+              value: "8080"
+          ports:
+            - name: http-app
+              containerPort: 3001
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: "/liveness"
+              port: http-app
+              scheme: HTTP
+            initialDelaySeconds: 20
+            periodSeconds: 5
+            successThreshold: 1
+            timeoutSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http-app
+              scheme: HTTP
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            successThreshold: 1
+            timeoutSeconds: 5
+---
+# Source: react-items-ui/templates/ingress.yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: react-items-ui
+  labels:
+    app: react-items-ui
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: "240"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "240"
+spec:
+  rules:
+    - host: react-items-ui.ibmgarageforcloud.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: react-items-ui
+                port:
+                  number:                     
+  tls:
+    - secretName: wildcard-ibmgarageforcloud-com
+      hosts: 
+        - react-items-ui.ibmgarageforcloud.com
