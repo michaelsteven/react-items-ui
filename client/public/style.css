@@ -1,0 +1,54 @@
+/* --------  HEADER ------------*/
+.header {
+  margin-top: 0rem;
+  padding-top: 0rem;
+}
+
+.header .items {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 0rem;
+  padding-top: 0.75rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-bottom: 1rem;
+  color: White;
+  background: Black;
+}
+
+.header .items a {
+  color: white;
+  text-decoration: none;
+  padding-left: 1rem;
+}
+
+/*----------  page related -----------*/
+.page {
+  position: relative;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 16px;
+  background-color: white;
+  padding-left: 3rem;
+  padding-top: 3rem;
+  padding-bottom: 3rem;
+}
+
+.title {
+  display: flex;
+  justify-content: Left;
+  font-size: 2em;
+  font-weight: bold;
+  padding-bottom: 5px;
+  margin-bottom: 0px;
+  color: #627792;
+}
+
+/* ------   Menus  -----------*/
+.hamburgerBar {
+  width: 20px;
+  height: 2px;
+  background-color: rgb(250, 246, 246);
+  margin: 4px 0;
+  transition: 0.4s;
+}

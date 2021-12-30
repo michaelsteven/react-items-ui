@@ -12,7 +12,7 @@ const __dirname = path.resolve();
 
 
 const corsOptions = {
-  origin: "http://localhost:${clientPort}",
+  origin: "http://localhost:3000",
 };
 
 const app = express();
@@ -29,7 +29,13 @@ app.use(process.env.BACKEND_API_ROOT, cors(corsOptions), (req, res) => {
     }
     else {
       const request_url = `${apiUrl}${req.url}`;
-      req.pipe(request(request_url)).pipe(res);
+      const options = {
+        url: request_url
+      }
+      req
+        .pipe(request(options))
+        .pipe(res);
+      console.log(req.headers);
       console.log("".concat(req.method).concat(" ").concat(request_url).concat(" ").concat(res.statusCode));
     }
 });

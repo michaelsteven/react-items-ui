@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import {Page} from '../common/index';
 
 const ErrorMessage = styled.div`
   width: 100%;
@@ -27,11 +28,11 @@ const Error = styled.div`
 
 export default function Unauthorized() {
   return (
-    <NotFoundContainer>
+    <Page>
       <Error>
         <ErrorMessage>401 Unauthorized</ErrorMessage>
       </Error>
-    </NotFoundContainer>
+    </Page>
   );
 }
 

@@ -2,7 +2,6 @@ import React, {useEffect, useState, ReactElement, FC} from 'react';
 import {IconButton, TableRow, TableCell } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/DeleteForever';
-import PropTypes from 'prop-types';
 
 interface IProps {
     item: {
@@ -45,17 +44,6 @@ const ItemTableRow: FC<IProps> = (props): ReactElement<typeof TableRow> => {
             </TableCell>
         </TableRow>
     );
-}
-
-ItemTableRow.propTypes = {
-    handleEditClicked: PropTypes.func.isRequired, 
-    handleDeleteClicked: PropTypes.func.isRequired, 
-    item: PropTypes.shape({
-        id: PropTypes.number.isRequired,
-        name: PropTypes.string.isRequired,
-        description: PropTypes.string.isRequired,
-        dateSubmitted: PropTypes.string.isRequired,
-    }).isRequired
 }
 
 export default ItemTableRow;

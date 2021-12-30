@@ -1,6 +1,5 @@
 import React, { useEffect, useState, ReactElement, FC}  from 'react';
 import { TextField, Button, ButtonGroup } from '@mui/material';
-import PropTypes from 'prop-types';
 
 interface IProps {
     initialItem:{
@@ -76,17 +75,5 @@ const ItemForm: FC<IProps> = (props): ReactElement<typeof HTMLFormElement> => {
     );
 }
 
-ItemForm.defaultProps = {
-    initialItem: {
-        name: '',
-        description: ''
-    }
-};
-
-ItemForm.propTypes = {
-    onSubmit: PropTypes.func.isRequired, 
-    onCancel: PropTypes.func.isRequired, 
-    initialItem: PropTypes.any
-}
 
 export default ItemForm;

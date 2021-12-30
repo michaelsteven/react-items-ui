@@ -15,18 +15,19 @@
     "author": "Michael Hepfer",
     "license": "Apache 2.0",
     "devDependencies": {
-        "concurrently": "^6.2.1",
+        "concurrently": "^6.3.0",
         "react-scripts": "^4.0.3"
     },
     "dependencies": {
         "cors": "^2.8.5",
         "dotenv": "^10.0.0",
         "express": "^4.17.1",
-        "nodemon": "^2.0.13",
-        "npm": "^7.24.1",
-        "request": "^2.88.2"
+        "nodemon": "^2.0.14",
+        "npm": "^8.1.1",
+        "request": "^2.88.2",
+        "xsrf-cookie": "^1.0.0"
     },
     "engines": {
         "node": "16.x"
-    }
+    } 
 }

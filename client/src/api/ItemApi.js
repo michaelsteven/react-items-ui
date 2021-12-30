@@ -1,4 +1,4 @@
-import sendRequest from "./SendRequest";
+import sendRequest from "./SendRequest.ts";
 
 export function checkHealth(){
     return sendRequest({

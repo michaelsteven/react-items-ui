@@ -1,4 +1,4 @@
-import React, {ReactElement, FC} from 'react';
+import {ReactElement, FC} from 'react';
 import { Button, Dialog, DialogTitle, DialogContent, Typography } from '@mui/material'
 import { makeStyles } from '@mui/styles'
 import CloseIcon from '@mui/icons-material/Close';
@@ -21,7 +21,7 @@ interface IProps {
         isOpen: boolean,
         title: string
     },
-    children: {}[],
+    children?: JSX.Element|JSX.Element[],
     onCancel: any,
 }
 
